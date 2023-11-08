@@ -24,7 +24,7 @@ options = {
     //isCapturing: true,
     //isCapturingGameCanvasOnly: true,
     //captureCanvasScale: 2,
-    //isPlayingBgm: true,
+    isPlayingBgm: true,
     //isReplayEnabled: true,
    // theme: "dark"
 };
@@ -44,7 +44,6 @@ options = {
     let slabs; // slabs
     let fallingFlag; //flag for falling slab
     let currentSlab; //current slab
-    let gameOver = false;   // game over
 
 // The game loop function
 function  update() {
@@ -148,13 +147,14 @@ function  update() {
         // Check collision, then turn falling flag back to false
         if(slabs[currentSlab - 1].pos.y + 2 >= slabs[currentSlab - 2].pos.y) {
             fallingFlag = false;
-
+            play("powerUp");
             // Calculate the overlap between the current and the previous slab
             const overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
 
             // If there is no overlap, end the game
             if (overlap === 0) {
-                gameOver;
+                play("explosion");
+                end();
                 return;
             }
 

@@ -41,6 +41,8 @@ options = {
     */
     
     let slabs; // slabs
+    let fallingFlag; //flag for falling slab
+    let currentSlab; //current slab
     
 
 // The game loop function
@@ -53,7 +55,7 @@ function  update() {
             pos: vec(G.WIDTH/2,G.HEIGHT/2),
             speed: 1
         });*/
-
+        // Initializing array of slabs (currently 10 for testing)
         slabs = times(10, () => {
             // Random number generator function
             // rnd( min, max )
@@ -66,56 +68,92 @@ function  update() {
                 // More RNG
                 speed: 1
             };
+        
         });
-
-
-
-
-            // Choose a color to draw
-            color("light_black");
-            // Draw the slab as a square of size 10
-            box(slabs[0].pos, 50,2);
-
-    
-
+        // Choose a color to draw
+        color("light_black");
+        // Draw the slab as a square of size 10
+        box(slabs[0].pos, 50,2);
 
         this.goingRight = true;
-
-
+        currentSlab = 1;
+        fallingFlag = false;
 	}
-    // Choose a color to draw
-    color("light_black");
-    // Draw the slab as a square of size 10
-    box(slabs[0].pos, 50,2);
-    
-    for (let i = 1; i < 10; i++)
-    {
-        slabs[i].pos.y = 11;
-        // 11 is kind of a magic number; I just experimented until I found the right height
-        // It's the height of the moving slab to be dropped. will add it as a const var in the const G container
-        if(slabs[i].pos.x == G.WIDTH)
-        {
-            this.goingRight = false;
-        }
-        else if (slabs[i].pos.x == 0)
-        {
-            this.goingRight = true;
-        }
-
-
-        if(this.goingRight == true)
-        {
-            slabs[i].pos.x += slabs[i].speed; //move the slab on top back and forth
-        }
-        else if (this.goingRight == false) slabs[i].pos.x -= slabs[i].speed;
-         
-        
+    // update loop begins
+        //console.log("x value: " + slabs[currentSlab].pos.x);
+        //console.log("y value: " + slabs[currentSlab].pos.y);
 
         // Choose a color to draw
         color("light_black");
-        // Draw the slab as a rectangle
-        box(slabs[i].pos, 50,2);
+        // Draw the slab as a square of size 10
+        for (let i = 0; i< 10; i++)
+        {
+            box(slabs[i].pos, 50,2); 
+
+        }
+        // this is disappearing?
+        slabs[currentSlab].pos.y = 11;
+        
+        
+
+            if(input.isJustPressed) // if space/mouse is pressed. this might be buggy. we'll see
+            {
+                //activate boolean
+                fallingFlag = true;
+                console.log("FALLING");
+                currentSlab++;
+    
+            }
+            
+
+            if(!fallingFlag)
+            {
+            
+            // 11 is kind of a magic number; I just experimented until I found the right height
+            // It's the height of the moving slab to be dropped. will add it as a const var in the const G container
+            if(slabs[currentSlab].pos.x == G.WIDTH)
+            {
+                this.goingRight = false;
+            }
+            else if (slabs[currentSlab].pos.x == 0)
+            {
+                this.goingRight = true;
+            }
+
+
+            if(this.goingRight == true)
+            {
+                slabs[currentSlab].pos.x += slabs[currentSlab].speed; //move the slab on top back and forth
+            }
+            else if (this.goingRight == false) slabs[currentSlab].pos.x -= slabs[currentSlab].speed;
+            
+            
+
+            // Choose a color to draw
+            color("light_black");
+            // Draw the slab as a rectangle
+            box(slabs[currentSlab].pos, 50,2);
     }
+
+    if(fallingFlag)
+    {
+        color("light_black");
+        // Draw the slab as a rectangle
+        box(slabs[currentSlab-1].pos, 50,2);
+
+        slabs[currentSlab-1].pos.y += slabs[currentSlab-1].speed;
+        //collide. after collision, THEN turn falling flag back to false
+        if(slabs[currentSlab-1].pos.y+2==slabs[currentSlab-2].pos.y)//slabs[currentSlab-1].pos.y == G.HEIGHT)
+        {
+            fallingFlag = false;
+            console.log("HIT!!!!!!")
+        }
+        
+    }
+
+
+        
+    
 
 
 

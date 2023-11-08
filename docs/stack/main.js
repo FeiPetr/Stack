@@ -72,7 +72,6 @@ function  update() {
         
         });
 
-        
         // Choose a color to draw
         color("light_black");
         // Draw the slab as a square of size 10
@@ -82,21 +81,20 @@ function  update() {
         currentSlab = 1;
         fallingFlag = false;
 	}
+
     // update loop begins
         //console.log("x value: " + slabs[currentSlab].pos.x);
         //console.log("y value: " + slabs[currentSlab].pos.y);
 
-        // Choose a color to draw
-        color("light_black");
-        // Draw the slab as a square of size 10
-        for (let i = 0; i< G.TOTALSLAB; i++)
-        {
-            box(slabs[i].pos, 50,2); 
-
-        }
-        slabs[currentSlab].pos.y = 11;
-        
-        
+    // Choose a color to draw
+    color("light_black");
+    // Draw the slab as a square of size 10
+    for (let i = 0; i< G.TOTALSLAB; i++)
+    {
+        box(slabs[i].pos, 50,2); 
+    }
+    
+    slabs[currentSlab].pos.y = 11; 
 
     if(input.isJustPressed && fallingFlag == false) // if space/mouse is pressed. this might be buggy. we'll see
     {
@@ -104,45 +102,34 @@ function  update() {
         fallingFlag = true;
         console.log("FALLING");
         currentSlab++;
-
     }
     
-
     if(!fallingFlag)
     {
-    
-    // 11 is kind of a magic number; I just experimented until I found the right height
-    // It's the height of the moving slab to be dropped. will add it as a const var in the const G container
-    if(slabs[currentSlab].pos.x == G.WIDTH)
-    {
-        this.goingRight = false;
-    }
-    else if (slabs[currentSlab].pos.x == 0)
-    {
-        this.goingRight = true;
-    }
+        // 11 is kind of a magic number; I just experimented until I found the right height
+        // It's the height of the moving slab to be dropped. will add it as a const var in the const G container
+        if(slabs[currentSlab].pos.x == G.WIDTH)
+        {
+            this.goingRight = false;
+        }
+        else if (slabs[currentSlab].pos.x == 0)
+        {
+            this.goingRight = true;
+        }
 
+        if(this.goingRight == true)
+        {
+            slabs[currentSlab].pos.x += slabs[currentSlab].speed; //move the slab on top back and forth
+        }
+        else if (this.goingRight == false) slabs[currentSlab].pos.x -= slabs[currentSlab].speed;
 
-    if(this.goingRight == true)
-    {
-        slabs[currentSlab].pos.x += slabs[currentSlab].speed; //move the slab on top back and forth
-    }
-    else if (this.goingRight == false) slabs[currentSlab].pos.x -= slabs[currentSlab].speed;
-    
-    
-
-    // Choose a color to draw
-    color("light_black");
-    // Draw the slab as a rectangle
-    box(slabs[currentSlab].pos, 50,2);
-    }
-
-    if(fallingFlag)
-    {
+        // Choose a color to draw
         color("light_black");
         // Draw the slab as a rectangle
-        box(slabs[currentSlab - 1].pos, 50, 2);
+        box(slabs[currentSlab].pos, 50,2);
 
+    } else{
+        
         slabs[currentSlab - 1].pos.y += slabs[currentSlab - 1].speed;
         // Check collision, then turn falling flag back to false
         if(slabs[currentSlab - 1].pos.y + 2 >= slabs[currentSlab - 2].pos.y) {
@@ -151,15 +138,18 @@ function  update() {
             // Calculate the overlap between the current and the previous slab
             const overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
 
-            // If there is no overlap, end the game
-            if (overlap === 0) {
+            if (overlap > 0) {
+                // Adjust the width of the current slab
+                slabs[currentSlab].width = overlap;
+
+                // Position the current slab so the overlap is visually correct
+                slabs[currentSlab].pos.x = slabs[currentSlab - 1].pos.x;
+
+            } else{
                 play("explosion");
                 end();
                 return;
             }
-
-            // Update the width of the current slab to the overlap
-            slabs[currentSlab - 1].width = overlap;
 
             // Prepare the next slab with the same width as the current slab
             if (currentSlab < G.TOTALSLAB - 1) {
@@ -167,7 +157,8 @@ function  update() {
                 slabs[currentSlab].pos.x = G.WIDTH / 2;  // Center the next slab
                 slabs[currentSlab].pos.y = 11;  // Set the height for the next slab to fall from
             }
-
+            
+            fallingFlag = false;
             addScore(1);
             console.log("HIT!!!!!!");
         }

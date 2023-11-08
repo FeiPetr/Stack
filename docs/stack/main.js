@@ -96,7 +96,7 @@ function  update() {
         
         
 
-            if(input.isJustPressed) // if space/mouse is pressed. this might be buggy. we'll see
+            if(input.isJustPressed && fallingFlag == false) // if space/mouse is pressed. this might be buggy. we'll see
             {
                 //activate boolean
                 fallingFlag = true;
@@ -146,6 +146,7 @@ function  update() {
         if(slabs[currentSlab-1].pos.y+2==slabs[currentSlab-2].pos.y)//slabs[currentSlab-1].pos.y == G.HEIGHT)
         {
             fallingFlag = false;
+            addScore(1);
             console.log("HIT!!!!!!")
         }
         

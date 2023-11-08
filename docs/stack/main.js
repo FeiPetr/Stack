@@ -14,6 +14,7 @@ characters = [
 const G = {
 	WIDTH: 100,
 	HEIGHT: 150,
+    TOTALSLAB: 40
 
 };
 
@@ -56,7 +57,7 @@ function  update() {
             speed: 1
         });*/
         // Initializing array of slabs (currently 10 for testing)
-        slabs = times(10, () => {
+        slabs = times(G.TOTALSLAB, () => {
             // Random number generator function
             // rnd( min, max )
             const posX = G.WIDTH/2;
@@ -86,12 +87,11 @@ function  update() {
         // Choose a color to draw
         color("light_black");
         // Draw the slab as a square of size 10
-        for (let i = 0; i< 10; i++)
+        for (let i = 0; i< G.TOTALSLAB; i++)
         {
             box(slabs[i].pos, 50,2); 
 
         }
-        // this is disappearing?
         slabs[currentSlab].pos.y = 11;
         
         

@@ -16,6 +16,7 @@ const G = {
 	HEIGHT: 150,
     TOTALSLAB: 40
 };
+let overlap = 50;
 
 // Game runtime options
 // Refer to the official documentation for all available options
@@ -26,24 +27,15 @@ options = {
     //captureCanvasScale: 2,
     isPlayingBgm: true,
     //isReplayEnabled: true,
-   // theme: "dark"
 };
-
 /**
-* @typedef {{
-    * pos: Vector,
-    * speed: number,
-    * width: number
-    * }} Slab
-    */
-    
-    /**
-    * @type  { Slab [] }
+* 
     */
     
     let slabs; // slabs
     let fallingFlag; //flag for falling slab
     let currentSlab; //current slab
+
 
 // The game loop function
 function  update() {
@@ -68,14 +60,17 @@ function  update() {
                 // More RNG
                 speed: 1,
                 width: 50,
+                
             };
+        
         
         });
 
         // Choose a color to draw
+        // playable
         color("light_black");
         // Draw the slab as a square of size 10
-        box(slabs[0].pos, 50,2);
+        //box(slabs[0].pos, 50,2);
 
         this.goingRight = true;
         currentSlab = 1;
@@ -87,14 +82,15 @@ function  update() {
         //console.log("y value: " + slabs[currentSlab].pos.y);
 
     // Choose a color to draw
-    color("light_black");
+    color("green");
     // Draw the slab as a square of size 10
     for (let i = 0; i< G.TOTALSLAB; i++)
     {
-        box(slabs[i].pos, 50,2); 
+        box(slabs[i].pos, slabs[i].width,2);
     }
-    
+        
     slabs[currentSlab].pos.y = 11; 
+    slabs[currentSlab].width = overlap;
 
     if(input.isJustPressed && fallingFlag == false) // if space/mouse is pressed. this might be buggy. we'll see
     {
@@ -122,11 +118,10 @@ function  update() {
             slabs[currentSlab].pos.x += slabs[currentSlab].speed; //move the slab on top back and forth
         }
         else if (this.goingRight == false) slabs[currentSlab].pos.x -= slabs[currentSlab].speed;
-
         // Choose a color to draw
-        color("light_black");
+        color("green");
         // Draw the slab as a rectangle
-        box(slabs[currentSlab].pos, 50,2);
+        box(slabs[currentSlab].pos, overlap,2); // this is the top slab
 
     } else{
         
@@ -136,7 +131,7 @@ function  update() {
             fallingFlag = false;
             play("powerUp");
             // Calculate the overlap between the current and the previous slab
-            const overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
+            overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
 
             if (overlap > 0) {
                 // Adjust the width of the current slab
@@ -148,6 +143,7 @@ function  update() {
             } else{
                 play("explosion");
                 end();
+                overlap = 50;
                 return;
             }
 

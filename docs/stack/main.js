@@ -58,7 +58,7 @@ function  update() {
                 // Creates a Vector
                 pos: vec(posX, posY),
                 // More RNG
-                speed: 1,
+                speed: 2,
                 width: 50,
                 
             };
@@ -87,6 +87,7 @@ function  update() {
     for (let i = 0; i< G.TOTALSLAB; i++)
     {
         box(slabs[i].pos, slabs[i].width,2);
+
     }
         
     slabs[currentSlab].pos.y = 11; 

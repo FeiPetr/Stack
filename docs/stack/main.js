@@ -149,9 +149,6 @@ function  update() {
         if(slabs[currentSlab - 1].pos.y + 2 >= slabs[currentSlab - 2].pos.y) {
             fallingFlag = false;
 
-            // Align the current slab to the center of the previous slab
-            slabs[currentSlab - 1].pos.x = slabs[currentSlab - 2].pos.x;
-
             // Calculate the overlap between the current and the previous slab
             const overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
 

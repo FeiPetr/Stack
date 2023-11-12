@@ -136,10 +136,25 @@ function  update() {
 
             if (overlap > 0) {
                 // Adjust the width of the current slab
-                slabs[currentSlab].width = overlap;
+                slabs[currentSlab-1].width = overlap;
 
                 // Position the current slab so the overlap is visually correct
-                slabs[currentSlab].pos.x = slabs[currentSlab - 1].pos.x;
+                // if slab1.x is greater than slab2.x
+                if(slabs[currentSlab-1].pos.x>slabs[currentSlab-2].pos.x)
+                {
+                    slabs[currentSlab-1].pos.x = slabs[currentSlab-2].pos.x + (slabs[currentSlab-2].width/2)-(slabs[currentSlab-1].width/2);
+                }
+                else
+                slabs[currentSlab-1].pos.x = slabs[currentSlab-2].pos.x - (slabs[currentSlab-2].width/2)+(slabs[currentSlab-1].width/2);
+                // shift the x position so that the edge of slabs[currentSlab-1]
+                // (calculated by pos.x + width/2) aligns with the edge of slabs[currentSlab-2]
+                // slab1.x + slab1.width/2  = slab2.x + slab2.width/2
+                // slab1.x = slab2.x + slab2.width/2-slab1.width/2
+                // ^^^ ~the math~ ^^^
+                // the signs are switched depending on which side of the old slab the new slab falls on
+                // don't ask me why that works, it seemed right in my brain and it was right. peace and love on planet earth
+
+                
 
             } else{
                 play("explosion");

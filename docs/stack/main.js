@@ -33,8 +33,12 @@ options = {
     */
     
     let slabs; // slabs
+    let debris;
     let fallingFlag; //flag for falling slab
     let currentSlab; //current slab
+    let currentdebris;
+    let debristhere = false;
+    let debrisright = -1;
 
 
 // The game loop function
@@ -65,6 +69,24 @@ function  update() {
         
         
         });
+        //debris settings
+        debris = times(G.TOTALSLAB, () => {
+            // Random number generator function
+            // rnd( min, max )
+            const posX = G.WIDTH/2;
+            const posY = G.HEIGHT-1;
+            // An object of type Slab with appropriate properties
+            return {
+                // Creates a Vector
+                pos: vec(posX, posY),
+                // More RNG
+                speed: 2,
+                width: 50,
+                
+            };
+        
+        
+        });
 
         // Choose a color to draw
         // playable
@@ -77,6 +99,13 @@ function  update() {
         fallingFlag = false;
 	}
 
+    //making debrises can change its color
+    color("green");
+    for (let i = 0; i< G.TOTALSLAB; i++)
+    {
+        
+        box(debris[i].pos, debris[i].width,2);
+    }
     // update loop begins
         //console.log("x value: " + slabs[currentSlab].pos.x);
         //console.log("y value: " + slabs[currentSlab].pos.y);
@@ -89,9 +118,11 @@ function  update() {
         box(slabs[i].pos, slabs[i].width,2);
 
     }
-        
+    
     slabs[currentSlab].pos.y = 11; 
     slabs[currentSlab].width = overlap;
+
+    
 
     if(input.isJustPressed && fallingFlag == false) // if space/mouse is pressed. this might be buggy. we'll see
     {
@@ -103,6 +134,11 @@ function  update() {
     
     if(!fallingFlag)
     {
+        //debris falling
+        debris[0].pos.y += debris[0].speed;
+        debris[1].pos.y += debris[1].speed;
+        
+        
         // 11 is kind of a magic number; I just experimented until I found the right height
         // It's the height of the moving slab to be dropped. will add it as a const var in the const G container
         if(slabs[currentSlab].pos.x == G.WIDTH)
@@ -133,19 +169,31 @@ function  update() {
             play("powerUp");
             // Calculate the overlap between the current and the previous slab
             overlap = getOverlap(slabs[currentSlab - 1], slabs[currentSlab - 2]);
+            
 
             if (overlap > 0) {
                 // Adjust the width of the current slab
+                
                 slabs[currentSlab-1].width = overlap;
-
+                
+                
                 // Position the current slab so the overlap is visually correct
                 // if slab1.x is greater than slab2.x
                 if(slabs[currentSlab-1].pos.x>slabs[currentSlab-2].pos.x)
                 {
                     slabs[currentSlab-1].pos.x = slabs[currentSlab-2].pos.x + (slabs[currentSlab-2].width/2)-(slabs[currentSlab-1].width/2);
+
+                    //spawning a debris for the right side
+                    debris[1].pos.x = slabs[currentSlab-2].pos.x +slabs[currentSlab-2].width/2 + (slabs[currentSlab-2].width-overlap)/2;
+                    debris[1].pos.y = slabs[currentSlab-1].pos.y;
+                    debris[1].width = slabs[currentSlab-2].width-overlap;
+                    debris[1].height = 2
                 }
                 else
-                slabs[currentSlab-1].pos.x = slabs[currentSlab-2].pos.x - (slabs[currentSlab-2].width/2)+(slabs[currentSlab-1].width/2);
+                slabs[currentSlab-1].pos.x = slabs[currentSlab-2].pos.x- (slabs[currentSlab-2].width/2)+(slabs[currentSlab-1].width/2);
+                
+                
+                
                 // shift the x position so that the edge of slabs[currentSlab-1]
                 // (calculated by pos.x + width/2) aligns with the edge of slabs[currentSlab-2]
                 // slab1.x + slab1.width/2  = slab2.x + slab2.width/2
@@ -154,6 +202,17 @@ function  update() {
                 // the signs are switched depending on which side of the old slab the new slab falls on
                 // don't ask me why that works, it seemed right in my brain and it was right. peace and love on planet earth
 
+                //spawning a debris for the left side
+                if(slabs[currentSlab-1].pos.x<slabs[currentSlab-2].pos.x){
+                    debrisright = 0;
+                    debristhere = true;
+                    
+                    debris[0].pos.x = slabs[currentSlab-2].pos.x-slabs[currentSlab-2].width/2 - (slabs[currentSlab-2].width-overlap)/2;
+                    debris[0].pos.y = slabs[currentSlab-1].pos.y
+                    debris[0].width = slabs[currentSlab-2].width-overlap;
+                    
+                    
+                }
                 
 
             } else{

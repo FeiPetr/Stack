@@ -2530,7 +2530,7 @@ image-rendering: pixelated;
   function rnds(lowOrHigh = 1, high) {
       return random$1.get(lowOrHigh, high) * random$1.getPlusOrMinus();
   }
-  function end(_gameOverText = "GAME OVER") {
+  function end(_gameOverText) {
       gameOverText = _gameOverText;
       if (isShowingTime) {
           exports.time = undefined;

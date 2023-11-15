@@ -3,8 +3,12 @@ title = "STACK";
 
 // The description, which is also displayed on the title screen
 description = `
-Stack to the top
+Stack to the top\n
+Press any\n
+key to begin!
 `;
+
+let gameOverString = `Game over!`
 
 // The array of custom sprites
 characters = [
@@ -27,6 +31,7 @@ options = {
     //captureCanvasScale: 2,
     isPlayingBgm: true,
     //isReplayEnabled: true,
+    theme: "crt"
 };
 /**
 * 
@@ -217,7 +222,7 @@ function  update() {
 
             } else{
                 play("explosion");
-                end();
+                end(gameOverString);
                 overlap = 50;
                 return;
             }
